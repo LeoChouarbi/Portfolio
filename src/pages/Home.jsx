@@ -56,8 +56,8 @@ const certifications = [
   {
     frontTitle: "ISO 27001 Lead Implementer",
     frontText: "Mise en œuvre ISO 27001.",
-    backTitle: "Préparation",
-    backText: "Prévu 2025",
+    backTitle: "Obtenue",
+    backText: "Février 2026",
     inProgress: true,
   },
   {
