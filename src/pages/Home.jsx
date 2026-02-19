@@ -58,13 +58,13 @@ const certifications = [
     frontText: "Mise en œuvre ISO 27001.",
     backTitle: "Obtenue",
     backText: "Février 2026",
-    inProgress: true,
+    inProgress: false,
   },
   {
     frontTitle: "CompTIA Security+",
     frontText: "Cybersécurité - certification internationale.",
     backTitle: "Préparation",
-    backText: "Prévu 2025",
+    backText: "Prévu 2026",
     inProgress: true,
   },
 ];
