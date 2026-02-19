@@ -4,10 +4,11 @@ const experiences = [
   {
     title: "Ingénieur SSI",
     company: "CS Group",
-    duration: "Sept. 2025 - Aujourd'hui · 6 mois",
+    duration: "Mars 2025 - Aujourd'hui · 1 an",
     location: "Le Plessis-Robinson, Île-de-France, France",
     type: "CDI",
     description: [
+      "CDI depuis le 1er mars 2025",
       "Conception d'architectures sécurisées (Security by Design - Phase Build)",
       "Analyses de risques EBIOS RM et modélisation de scénarios de menaces",
       "Durcissement systèmes (CIS benchmarks) et audits de vulnérabilités",
@@ -19,7 +20,7 @@ const experiences = [
   {
     title: "Stagiaire en sécurité des systèmes d'information",
     company: "CS Group",
-    duration: "Mars 2025 - Sept. 2025 · 7 mois",
+    duration: "Sept. 2024 - Mars 2025 · 7 mois",
     location: "Le Plessis-Robinson, Île-de-France, France",
     type: "Stage",
     description: [
