@@ -2,59 +2,43 @@ import React from "react";
 
 const experiences = [
   {
-    title: "Ingénieur SSI - Communications Aériennes",
-    company: "CS Group (Client Très Sensible)",
+    title: "Ingénieur en Sécurité des Systèmes d'Information",
+    company: "CS Group",
     duration: "Mars 2025 - Aujourd'hui",
-    location: "Le Plessis-Robinson, Île-de-France",
+    location: "Île-de-France",
     type: "CDI",
     description: [
-      "Durcissement de machines et validation",
+      "Maintien en conditions de sécurité (MCS) de systèmes critiques",
+      "Durcissement de systèmes, validation et déploiement sécurisé",
       "Réalisation de scripts de conformité et de remédiation",
-      "Gestion des licences et déploiement Trellix",
-      "Pentest interne sur le périmètre projet",
-      "Gestion des Faits Techniques (FT) et push GERRIT",
-      "Maintien en Condition de Sécurité (MCS)"
+      "Analyse de risques et rédaction de documentation de sécurité",
+      "Tests de sécurité internes, gestion des vulnérabilités et suivi des corrections"
     ],
   },
   {
-    title: "Ingénieur SSI - Lutte Anti-Drone",
-    company: "CS Group (Client Sensible)",
-    duration: "Mai 2025 - Aujourd'hui",
-    location: "Le Plessis-Robinson, Île-de-France",
-    type: "Projet",
-    description: [
-      "Rédaction et mise à jour de fiches de lot et documents client",
-      "Analyse de schémas d’infrastructure technique",
-      "Rédaction de dossier de définition technique orienté sécurité",
-      "Revue d’analyse de risque EBIOS RM et ajout de scénarios",
-      "Critique SSI des équipements selon exigences client"
-    ],
-  },
-  {
-    title: "Ingénieur SSI - Contrôle Aérien",
-    company: "CS Group (Client Sensible)",
-    duration: "Oct. 2025 - Aujourd'hui",
-    location: "Le Plessis-Robinson, Île-de-France",
-    type: "Projet",
-    description: [
-      "Rédaction, relecture et analyse du PTSSI",
-      "Rédaction et réalisation du RTSSI",
-      "Leading projet côté SSI",
-      "Animation de Cotech avec le projet"
-    ],
-  },
-  {
-    title: "Ingénieur SSI - Mission Ponctuelle",
+    title: "Stagiaire en Sécurité des Systèmes d'Information",
     company: "CS Group",
-    duration: "Juin 2025 - Juil. 2025",
-    location: "Toulon / Le Plessis-Robinson",
-    type: "Mission",
+    duration: "Mars 2025 - Sept. 2025",
+    location: "Île-de-France",
+    type: "Stage",
     description: [
-      "Durcissement de machines et validation (Oracle Linux)",
-      "Scripts de dérogation et de conformité",
-      "Clone de disque bit à bit",
-      "Validation configuration BIOS et hardware (Deep Clear CMOS)",
-      "Déploiement OS sécurisé sur site"
+      "Analyse de vulnérabilités sur différents environnements",
+      "Durcissement des systèmes et mise en œuvre de recommandations de sécurité",
+      "Rédaction et exécution de plans de tests de sécurité",
+      "Élaboration de rapports de tests et suivi des actions correctives"
+    ],
+  },
+  {
+    title: "Responsable de la Supervision",
+    company: "Thales",
+    duration: "Avr. 2024 - Août 2024",
+    location: "Gennevilliers, Île-de-France",
+    type: "Stage",
+    description: [
+      "Supervision de l'ensemble des machines et équipements de la plateforme à travers Hawk et Grafana",
+      "Mission au sein d’un projet de grande envergure dans le domaine des télécommunications",
+      "Gestion des infrastructures réseau",
+      "Découverte des méthodes d’organisation et de management pour des projets de grande envergure"
     ],
   },
 ];
@@ -73,8 +57,8 @@ const ExperienceAndContact = () => {
               <div className="flex justify-between items-start mb-3">
                 <h3 className="text-xl font-semibold">{exp.title}</h3>
                 <span className={`px-3 py-1 rounded-full text-xs font-medium ${exp.type === "CDI"
-                    ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
-                    : "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30"
+                  ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+                  : "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30"
                   }`}>
                   {exp.type}
                 </span>
