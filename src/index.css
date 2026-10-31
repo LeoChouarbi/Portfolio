@@ -43,3 +43,17 @@ body {
   from { transform: rotate(0deg) translateX(var(--orbit)) rotate(0deg); }
   to { transform: rotate(360deg) translateX(var(--orbit)) rotate(-360deg); }
 }
+
+/* ---- Filet décoratif sous les titres de section ---- */
+.section-divider {
+  display: block;
+  width: 120px;
+  height: 3px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, transparent, #22d3ee, #a78bfa, #f472b6, transparent);
+  background-size: 200% 100%;
+  animation: dividerShift 5s linear infinite;
+}
+@keyframes dividerShift {
+  to { background-position: 200% 0; }
+}

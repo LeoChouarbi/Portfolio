@@ -3,6 +3,7 @@ import ShinyCard from "../components/ShinyCard";
 import SkillCloud from "../components/SkillCloud";
 import ConstellationPortal from "../components/ConstellationPortal";
 import ExperienceAndContact from "../components/ExperienceAndContact";
+import SectionHeading from "../components/SectionHeading";
 
 const certifications = [
   {
@@ -19,7 +20,7 @@ const certifications = [
   },
   {
     frontTitle: "Ebios RM (ANSSI)",
-    frontText: "Méthodologie d’analyse de risques.ISO 27005",
+    frontText: "Méthode d'analyse de risques (ISO 27005).",
     backTitle: "Obtenue",
     backText: "Janvier 2025",
   },
@@ -81,8 +82,8 @@ const Home = () => {
           Léo Chouarbi
         </h1>
         <p className="mx-auto mt-4 max-w-2xl text-slate-300">
-          Cybersécurité, SSI, radiofréquences &amp; SDR. Maintien en condition de
-          sécurité, durcissement, analyse de risques et projets techniques —
+          Cybersécurité, SSI, radiofréquences et SDR. Maintien en condition de
+          sécurité, durcissement, analyse de risques et projets techniques,
           présentés ici comme une constellation à explorer.
         </p>
       </section>
@@ -93,7 +94,11 @@ const Home = () => {
       </section>
 
       <section id="certifications" className="my-16">
-        <h2 className="text-2xl font-semibold text-white mb-6 text-center">Certifications 🏆</h2>
+        <SectionHeading
+          kicker="Reconnaissances"
+          title="Certifications"
+          subtitle="Survolez une carte pour en découvrir le détail."
+        />
         <div className="flex flex-wrap justify-center gap-6 max-w-7xl mx-auto">
           {certifications.map((cert, index) => (
             <ShinyCard

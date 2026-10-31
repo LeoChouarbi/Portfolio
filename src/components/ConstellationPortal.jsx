@@ -78,8 +78,8 @@ const ConstellationPortal = () => {
           Explorez ma <span className="bg-gradient-to-r from-cyan-300 to-fuchsia-400 bg-clip-text text-transparent">constellation de projets</span>
         </h2>
         <p className="mx-auto mt-3 max-w-xl text-slate-300 md:mx-0">
-          Chaque planète est un projet : Radio/SDR, satellite, MCS &amp; durcissement,
-          lutte anti-drone, contrôle aérien, moteur 3D, IA… Naviguez, survolez et
+          Chaque planète est un projet : Radio/SDR, satellite, MCS et durcissement,
+          lutte anti-drone, contrôle aérien, moteur 3D, IA. Naviguez, survolez et
           cliquez pour plonger dans chacun.
         </p>
         <Link

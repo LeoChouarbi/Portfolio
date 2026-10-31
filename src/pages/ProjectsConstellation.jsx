@@ -1,168 +1,180 @@
-import { useMemo, useRef, useState, Suspense } from "react";
+import { useEffect, useMemo, useRef, useState, Suspense } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, useGLTF, Stars, Html, Float } from "@react-three/drei";
+import { OrbitControls, useGLTF, useAnimations, Stars, Html, Float } from "@react-three/drei";
 import { AnimatePresence, motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import * as THREE from "three";
 
 /* ------------------------------------------------------------------ */
-/*  Données : une "planète" par gros projet / domaine                  */
+/*  Modeles 3D (fichiers locaux, servis par le site)                   */
 /* ------------------------------------------------------------------ */
-const MODELS = {
-  radio: import.meta.env.BASE_URL + "models/radio.glb",
-  midnight: import.meta.env.BASE_URL + "models/midnight.glb",
-  manuscrit: import.meta.env.BASE_URL + "models/manuscrit.glb",
-  sat: import.meta.env.BASE_URL + "models/sat.glb",
-};
+const M = (f) => import.meta.env.BASE_URL + "models/" + f;
 
+/* Une planete 3D par gros projet / domaine.
+   size = taille cible normalisee (les modeles sont auto-redimensionnes). */
 const PROJECTS = [
   {
-    title: "Radio / SDR — ESIEA",
-    tag: "Radiofréquences · Enseignement",
-    desc: "Conception et animation d'un module de radiofréquences (Bac+4) : fondamentaux RF, échantillonnage, signaux I/Q, modulation/démodulation. Mise en œuvre d'une chaîne SDR complète (BladeRF 2.0 micro xA9, RTL-SDR, GNU Radio, GQRX) avec acquisition et analyse spectrale.",
+    title: "Radio & SDR",
+    tag: "Radiofréquences · ESIEA",
+    desc: "Conception et animation d'un module de radiofréquences (Bac+4) : fondamentaux RF, échantillonnage, signaux I/Q, modulation et démodulation. Mise en œuvre d'une chaîne SDR complète (BladeRF 2.0 micro xA9, RTL-SDR, GNU Radio, GQRX) avec acquisition et analyse spectrale.",
     color: "#60a5fa",
-    kind: "model",
-    model: "radio",
-    position: [3.2, 1.6, 0],
-    scaleFactor: 0.06,
+    model: "radio.glb",
+    position: [3.4, 1.7, 0],
+    size: 2.0,
     link: "https://leochouarbi.github.io/radio/",
   },
   {
     title: "Flux Satellite",
     tag: "Traitement du signal",
-    desc: "Réception et décodage de flux satellite via chaîne parabolique + LNB : captation des signaux, traitement du signal et visualisation temps réel sur serveur web. Analyse spectrale, étude des décodeurs et des mécanismes de chiffrement/obfuscation.",
+    desc: "Réception et décodage de flux satellite via chaîne parabolique et LNB : captation des signaux, traitement et visualisation temps réel sur serveur web. Analyse spectrale, étude des décodeurs et des mécanismes de chiffrement et d'obfuscation.",
     color: "#34d399",
-    kind: "model",
-    model: "sat",
-    position: [-3.4, 1.1, -0.5],
-    scaleFactor: 0.17,
+    model: "sat.glb",
+    position: [-3.6, 1.2, -0.5],
+    size: 1.9,
   },
   {
     title: "Midnight Engine",
     tag: "Moteur 3D · C++",
-    desc: "Moteur 3D temps réel en C++ pour la génération de scènes dynamiques : rendu avancé, gestion des lumières et caméras, architecture modulaire pensée pour l'extension.",
+    desc: "Moteur 3D temps réel en C++ pour la génération de scènes dynamiques : rendu avancé, gestion des lumières et des caméras, architecture modulaire pensée pour l'extension.",
     color: "#a78bfa",
-    kind: "model",
-    model: "midnight",
-    position: [-2.6, -1.9, 0.4],
-    scaleFactor: 0.15,
+    model: "midnight.glb",
+    position: [-2.7, -2.0, 0.4],
+    size: 1.7,
   },
   {
     title: "Reconnaissance IA",
     tag: "Algo génétique · PyTorch",
-    desc: "Reconnaissance de chiffres manuscrits via algorithme génétique en C, entraînement de modèles PyTorch et évaluation sur datasets annotés. Pipeline hybride C/Python pour performance et flexibilité.",
+    desc: "Reconnaissance de chiffres manuscrits via algorithme génétique en C, entraînement de modèles PyTorch et évaluation sur datasets annotés. Pipeline hybride C et Python pour la performance et la flexibilité.",
     color: "#f472b6",
-    kind: "model",
-    model: "manuscrit",
-    position: [2.6, -2.0, 0.2],
-    scaleFactor: 0.45,
+    model: "manuscrit.glb",
+    position: [2.7, -2.1, 0.2],
+    size: 1.7,
   },
   {
     title: "MCS & Durcissement",
     tag: "CS Group · Mission MCS",
-    desc: "Pilotage du Maintien en Condition de Sécurité d'un parc sensible : durcissement Oracle Linux / Windows 11 (CIS, ANSSI), scripts Bash/Python de conformité et remédiation, gestion des vulnérabilités (Cyberwatch, Dependency-Track, SBOM/VEX), packages de sécurité et reporting.",
+    desc: "Pilotage du Maintien en Condition de Sécurité d'un parc sensible : durcissement Oracle Linux et Windows 11 (CIS, ANSSI), scripts Bash et Python de conformité et de remédiation, gestion des vulnérabilités (Cyberwatch, Dependency-Track, SBOM, VEX), packages de sécurité et reporting.",
     color: "#22d3ee",
-    kind: "proc",
-    position: [0, 2.9, -1.2],
-    radius: 0.62,
+    model: "helmet.glb",
+    position: [0, 3.0, -1.2],
+    size: 1.6,
   },
   {
     title: "Lutte anti-drone",
-    tag: "Défense · 3 projets sensibles",
-    desc: "Rédaction de Plans d'Assurance Sécurité et dossiers techniques, analyses de risques EBIOS RM, revue d'architectures / flux / VLAN, vérification de conformité et empreintes cryptographiques. Prise en compte des exigences OTAN et du contrôle des exportations.",
+    tag: "Défense · projets sensibles",
+    desc: "Rédaction de Plans d'Assurance Sécurité et de dossiers techniques, analyses de risques EBIOS RM, revue d'architectures, de flux et de VLAN, vérification de conformité et d'empreintes cryptographiques. Prise en compte des exigences OTAN et du contrôle des exportations.",
     color: "#f59e0b",
-    kind: "proc",
-    position: [0.2, -0.2, 2.6],
-    radius: 0.5,
+    model: "robot.glb",
+    position: [0.2, -0.3, 2.8],
+    size: 1.7,
   },
   {
     title: "Contrôle aérien",
-    tag: "SSI projet · PTSSI / RTSSI",
+    tag: "SSI projet · PTSSI, RTSSI",
     desc: "Rédaction et analyse de documents de sécurité projet (PTSSI, RTSSI), pilotage et coordination des activités SSI, comités techniques tracés, analyse des architectures et des écarts de conformité, contribution à la gouvernance SSI et au MCS/MCO.",
     color: "#c084fc",
-    kind: "proc",
-    position: [-0.3, 0.3, -2.8],
-    radius: 0.5,
+    model: "plane.glb",
+    position: [-0.3, 0.4, -2.9],
+    size: 2.0,
   },
 ];
 
 /* ------------------------------------------------------------------ */
-/*  Planète GLB (modèle 3D local)                                      */
+/*  Modele 3D : auto-normalise, emissif colore, anime si possible      */
 /* ------------------------------------------------------------------ */
-function ModelPlanet({ project, scaleFactor, hovered, focused, onOver, onOut, onClick }) {
-  const { scene } = useGLTF(project.model);
-  // clone pour éviter le partage d'instance si le même modèle était réutilisé
-  const cloned = useMemo(() => scene.clone(), [scene]);
-  const ref = useRef();
+function Model3D({ project, hovered, focused, onOver, onOut, onClick }) {
+  const group = useRef();
+  const spin = useRef();
+  const { scene, animations } = useGLTF(M(project.model));
+  const { actions } = useAnimations(animations, group);
+
+  // Normalisation (taille + recentrage) + teinte emissive -> une seule fois
+  useMemo(() => {
+    const box = new THREE.Box3().setFromObject(scene);
+    const size = new THREE.Vector3();
+    const center = new THREE.Vector3();
+    box.getSize(size);
+    box.getCenter(center);
+    const maxDim = Math.max(size.x, size.y, size.z) || 1;
+    const s = project.size / maxDim;
+    scene.scale.setScalar(s);
+    scene.position.set(-center.x * s, -center.y * s, -center.z * s);
+
+    const col = new THREE.Color(project.color);
+    scene.traverse((o) => {
+      if (o.isMesh && o.material) {
+        const mats = Array.isArray(o.material) ? o.material : [o.material];
+        mats.forEach((m) => {
+          if ("emissive" in m) {
+            m.emissive = col.clone();
+            m.emissiveIntensity = 0.35;
+          }
+          m.toneMapped = true;
+        });
+      }
+    });
+  }, [scene, project.color, project.size]);
+
+  // Joue la premiere animation disponible (robot, oiseaux...)
+  useEffect(() => {
+    const first = Object.values(actions || {})[0];
+    if (first) first.reset().fadeIn(0.3).play();
+    return () => first?.fadeOut(0.2);
+  }, [actions]);
 
   useFrame((_, delta) => {
-    if (ref.current) {
-      ref.current.rotation.y += delta * 0.4;
-      const target = (hovered || focused) ? scaleFactor * 1.25 : scaleFactor;
-      const cur = ref.current.scale.x;
-      const next = THREE.MathUtils.lerp(cur, target, 0.15);
-      ref.current.scale.setScalar(next);
-    }
-  });
-
-  return (
-    <primitive
-      ref={ref}
-      object={cloned}
-      onPointerOver={onOver}
-      onPointerOut={onOut}
-      onClick={onClick}
-    />
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/*  Planète procédurale (sphère + anneau + halo)                       */
-/* ------------------------------------------------------------------ */
-function ProcPlanet({ project, hovered, focused, onOver, onOut, onClick }) {
-  const ref = useRef();
-  const ringRef = useRef();
-  const r = project.radius || 0.55;
-
-  useFrame((_, delta) => {
-    if (ref.current) {
-      ref.current.rotation.y += delta * 0.3;
-      const target = (hovered || focused) ? 1.18 : 1;
-      ref.current.scale.setScalar(
-        THREE.MathUtils.lerp(ref.current.scale.x, target, 0.15)
+    if (spin.current) {
+      spin.current.rotation.y += delta * 0.35;
+      const target = hovered || focused ? 1.18 : 1;
+      spin.current.scale.setScalar(
+        THREE.MathUtils.lerp(spin.current.scale.x, target, 0.15)
       );
     }
-    if (ringRef.current) ringRef.current.rotation.z += delta * 0.6;
+    // emissif plus fort au survol
+    const want = hovered || focused ? 0.9 : 0.35;
+    scene.traverse((o) => {
+      if (o.isMesh && o.material) {
+        const mats = Array.isArray(o.material) ? o.material : [o.material];
+        mats.forEach((m) => {
+          if ("emissiveIntensity" in m) {
+            m.emissiveIntensity = THREE.MathUtils.lerp(m.emissiveIntensity, want, 0.1);
+          }
+        });
+      }
+    });
   });
 
+  const glow = project.size * 0.72;
+
   return (
-    <group ref={ref} onPointerOver={onOver} onPointerOut={onOut} onClick={onClick}>
+    <group ref={group} onPointerOver={onOver} onPointerOut={onOut} onClick={onClick}>
+      {/* halo lumineux additif -> le modele ressort sur le fond sombre */}
       <mesh>
-        <sphereGeometry args={[r, 48, 48]} />
-        <meshStandardMaterial
+        <sphereGeometry args={[glow, 32, 32]} />
+        <meshBasicMaterial
           color={project.color}
-          emissive={project.color}
-          emissiveIntensity={hovered || focused ? 0.9 : 0.45}
-          roughness={0.35}
-          metalness={0.4}
+          transparent
+          opacity={hovered || focused ? 0.28 : 0.14}
+          blending={THREE.AdditiveBlending}
+          side={THREE.BackSide}
+          depthWrite={false}
         />
       </mesh>
-      {/* grille de surface */}
-      <mesh scale={1.003}>
-        <sphereGeometry args={[r, 20, 20]} />
-        <meshBasicMaterial color={project.color} wireframe transparent opacity={0.18} />
-      </mesh>
-      {/* anneau orbital */}
-      <mesh ref={ringRef} rotation={[Math.PI / 2.1, 0, 0]}>
-        <ringGeometry args={[r * 1.5, r * 1.62, 64]} />
-        <meshBasicMaterial color={project.color} side={THREE.DoubleSide} transparent opacity={0.5} />
-      </mesh>
+      {/* lumiere coloree de proximite */}
+      <pointLight
+        color={project.color}
+        intensity={hovered || focused ? 3 : 1.4}
+        distance={glow * 6}
+      />
+      <group ref={spin}>
+        <primitive object={scene} />
+      </group>
     </group>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/*  Wrapper commun : flottement, label HTML, interactions              */
+/*  Enveloppe : flottement, label + interactions                       */
 /* ------------------------------------------------------------------ */
 function Planet({ project, index, hovered, focused, setHover, setFocus }) {
   const isHover = hovered === index;
@@ -187,21 +199,11 @@ function Planet({ project, index, hovered, focused, setHover, setFocus }) {
 
   return (
     <group position={project.position}>
-      <Float speed={2} rotationIntensity={0.3} floatIntensity={0.6}>
-        {project.kind === "model" ? (
-          <ModelPlanet
-            project={{ ...project, model: MODELS[project.model] }}
-            scaleFactor={project.scaleFactor}
-            hovered={isHover}
-            focused={isFocus}
-            {...handlers}
-          />
-        ) : (
-          <ProcPlanet project={project} hovered={isHover} focused={isFocus} {...handlers} />
-        )}
+      <Float speed={1.6} rotationIntensity={0.25} floatIntensity={0.5}>
+        <Model3D project={project} hovered={isHover} focused={isFocus} {...handlers} />
 
-        {/* label flottant toujours visible */}
-        <Html center distanceFactor={9} position={[0, (project.radius || 0.7) + 0.9, 0]}>
+        {/* label toujours visible SOUS la planete */}
+        <Html center distanceFactor={10} position={[0, -(project.size * 0.62 + 0.5), 0]}>
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -221,7 +223,7 @@ function Planet({ project, index, hovered, focused, setHover, setFocus }) {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Caméra : focus progressif sur la planète sélectionnée              */
+/*  Camera : focus progressif sur la planete selectionnee              */
 /* ------------------------------------------------------------------ */
 function CameraRig({ focusPos, controlsRef }) {
   const tmp = useRef(new THREE.Vector3());
@@ -230,7 +232,7 @@ function CameraRig({ focusPos, controlsRef }) {
     if (!controls || !focusPos) return;
     const target = tmp.current.set(focusPos[0], focusPos[1], focusPos[2]);
     controls.target.lerp(target, 0.07);
-    const camDesired = target.clone().add(new THREE.Vector3(0, 0.6, 3.4));
+    const camDesired = target.clone().add(new THREE.Vector3(0, 0.6, 3.6));
     state.camera.position.lerp(camDesired, 0.07);
     controls.update();
   });
@@ -250,7 +252,7 @@ function ConstellationLines() {
       ]);
       return (
         <line key={`${i1}-${i2}`} geometry={geometry}>
-          <lineBasicMaterial attach="material" color="#2b3a66" transparent opacity={0.35} />
+          <lineBasicMaterial attach="material" color="#38508f" transparent opacity={0.3} />
         </line>
       );
     })
@@ -266,7 +268,8 @@ const ProjectsConstellation = () => {
   const [hovered, setHovered] = useState(null);
   const [focused, setFocused] = useState(null);
 
-  const active = focused !== null ? PROJECTS[focused] : hovered !== null ? PROJECTS[hovered] : null;
+  const active =
+    focused !== null ? PROJECTS[focused] : hovered !== null ? PROJECTS[hovered] : null;
   const focusPos = focused !== null ? PROJECTS[focused].position : null;
 
   return (
@@ -277,10 +280,11 @@ const ProjectsConstellation = () => {
         onPointerMissed={() => setFocused(null)}
       >
         <color attach="background" args={["#060616"]} />
-        <fog attach="fog" args={["#060616", 12, 28]} />
-        <ambientLight intensity={0.5} />
-        <pointLight position={[6, 10, 10]} intensity={2.2} color="#ffffff" />
-        <pointLight position={[-8, -6, -4]} intensity={1} color="#5b3bff" />
+        <fog attach="fog" args={["#060616", 14, 30]} />
+        <ambientLight intensity={0.85} />
+        <hemisphereLight args={["#bcd0ff", "#1a1030", 0.6]} />
+        <directionalLight position={[6, 10, 8]} intensity={1.6} color="#ffffff" />
+        <pointLight position={[-8, -6, -4]} intensity={0.8} color="#5b3bff" />
         <Stars radius={120} depth={60} count={6000} factor={4} fade speed={0.6} />
 
         <OrbitControls
@@ -288,7 +292,7 @@ const ProjectsConstellation = () => {
           enableZoom
           enablePan={false}
           autoRotate={focused === null}
-          autoRotateSpeed={0.6}
+          autoRotateSpeed={0.5}
           minDistance={3}
           maxDistance={16}
         />
@@ -315,11 +319,11 @@ const ProjectsConstellation = () => {
       <div className="pointer-events-none absolute left-6 top-6 z-20 max-w-sm">
         <h1 className="text-2xl font-bold text-white drop-shadow">Constellation de projets</h1>
         <p className="mt-1 text-sm text-cyan-200/80">
-          Faites glisser pour tourner · molette pour zoomer · cliquez une planète pour l'explorer.
+          Faites glisser pour tourner, molette pour zoomer, cliquez une planète pour l'explorer.
         </p>
       </div>
 
-      {/* Panneau détail */}
+      {/* Panneau detail */}
       <AnimatePresence>
         {active && (
           <motion.div
@@ -379,7 +383,7 @@ const ProjectsConstellation = () => {
   );
 };
 
-// préchargement des modèles
-Object.values(MODELS).forEach((m) => useGLTF.preload(m));
+// prechargement des modeles
+PROJECTS.forEach((p) => useGLTF.preload(M(p.model)));
 
 export default ProjectsConstellation;

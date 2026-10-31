@@ -14,6 +14,7 @@ import "./SkillCloud.css";
 
 // Catégories + couleur d'accent (glow)
 const CATEGORIES = {
+  Humain: { label: "Savoir-être & Humain", color: "#facc15" },
   Expertise: { label: "Expertise & Posture", color: "#2dd4bf" },
   SSI: { label: "SSI & Gouvernance", color: "#22d3ee" },
   Systemes: { label: "Systèmes", color: "#a78bfa" },
@@ -27,7 +28,21 @@ const CATEGORIES = {
 
 // Compétences issues du CV 2026. `w` = poids (taille de la bulle).
 const SKILLS = [
-  // Expertise & posture — compétences orientées valeur / rôle (recrutement & évolution)
+  // Savoir-être & humain : le coeur du métier SSI (collectif, écoute, transmission)
+  { name: "Esprit d'équipe", cat: "Humain", w: 1.6 },
+  { name: "Sens du collectif", cat: "Humain", w: 1.3 },
+  { name: "Communication claire", cat: "Humain", w: 1.4 },
+  { name: "Pédagogie & vulgarisation", cat: "Humain", w: 1.45 },
+  { name: "Écoute & conseil", cat: "Humain", w: 1.3 },
+  { name: "Esprit d'analyse", cat: "Humain", w: 1.3 },
+  { name: "Rigueur", cat: "Humain", w: 1.25 },
+  { name: "Autonomie", cat: "Humain", w: 1.2 },
+  { name: "Adaptabilité", cat: "Humain", w: 1.2 },
+  { name: "Curiosité technique", cat: "Humain", w: 1.25 },
+  { name: "Gestion du stress", cat: "Humain", w: 1.1 },
+  { name: "Fiabilité & engagement", cat: "Humain", w: 1.2 },
+
+  // Expertise & posture : compétences orientées valeur / rôle (recrutement & évolution)
   { name: "Pilotage MCS / MCO", cat: "Expertise", w: 1.6 },
   { name: "Analyse de risques (EBIOS RM)", cat: "Expertise", w: 1.5 },
   { name: "Gestion des vulnérabilités", cat: "Expertise", w: 1.45 },
@@ -37,9 +52,7 @@ const SKILLS = [
   { name: "Audit & contrôle de conformité", cat: "Expertise", w: 1.3 },
   { name: "Coordination projet & comités", cat: "Expertise", w: 1.25 },
   { name: "Automatisation & industrialisation", cat: "Expertise", w: 1.3 },
-  { name: "Pédagogie & transmission", cat: "Expertise", w: 1.15 },
   { name: "Anglais C1 (TOEIC 940)", cat: "Expertise", w: 1.15 },
-  { name: "Rigueur & autonomie", cat: "Expertise", w: 1.1 },
 
   // SSI & gouvernance
   { name: "MCS / MCO", cat: "SSI", w: 1.4 },
@@ -229,9 +242,9 @@ const SkillCloud = () => {
 
   return (
     <div className="skillcloud">
-      <h2 className="skillcloud__title">Compétences</h2>
+      <h2 className="skillcloud__title">Compétences & savoir-être</h2>
       <p className="skillcloud__subtitle">
-        Survolez le nuage — les compétences réagissent à votre curseur. Filtrez par domaine.
+        Survolez le nuage, les compétences réagissent à votre curseur. Filtrez par domaine.
       </p>
 
       <div className="skillcloud__filters">
