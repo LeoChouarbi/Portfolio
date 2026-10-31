@@ -1,0 +1,124 @@
+.skillcloud {
+  width: 100%;
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 3rem 1rem;
+  color: #fff;
+}
+
+.skillcloud__title {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 800;
+  text-align: center;
+  letter-spacing: -0.02em;
+  background: linear-gradient(90deg, #67e8f9, #a78bfa, #f472b6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.skillcloud__subtitle {
+  text-align: center;
+  color: #94a3b8;
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.skillcloud__filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+  margin: 1.6rem auto 0.5rem;
+  max-width: 60rem;
+}
+
+.skillcloud__chip {
+  --chip: #e5e7eb;
+  padding: 0.4rem 0.95rem;
+  border-radius: 9999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #cbd5e1;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.03);
+  cursor: pointer;
+  transition: color 0.25s, border-color 0.25s, background 0.25s, box-shadow 0.25s, transform 0.15s;
+}
+
+.skillcloud__chip:hover {
+  transform: translateY(-1px);
+  border-color: var(--chip);
+  color: #fff;
+}
+
+.skillcloud__chip.is-active {
+  color: #06121f;
+  background: var(--chip);
+  border-color: var(--chip);
+  box-shadow: 0 0 18px -2px var(--chip);
+}
+
+.skillcloud__stage {
+  position: relative;
+  width: 100%;
+  height: min(70vh, 620px);
+  margin-top: 1rem;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  /* halo de fond "liquide" */
+  background:
+    radial-gradient(60% 55% at 50% 45%, rgba(34, 211, 238, 0.10), transparent 70%),
+    radial-gradient(45% 45% at 70% 70%, rgba(167, 139, 250, 0.10), transparent 70%),
+    radial-gradient(40% 40% at 25% 75%, rgba(244, 114, 182, 0.08), transparent 70%),
+    rgba(255, 255, 255, 0.015);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  touch-action: none;
+  cursor: crosshair;
+}
+
+.skillcloud__bubble {
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* le translate réel est appliqué en JS via transform */
+  will-change: transform, opacity;
+  padding: 0.5em 0.95em;
+  border-radius: 9999px;
+  white-space: nowrap;
+  font-weight: 600;
+  line-height: 1;
+  color: #e9f6ff;
+  background: rgba(10, 16, 32, 0.55);
+  border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.02),
+    0 0 18px -6px var(--accent),
+    inset 0 0 14px -8px var(--accent);
+  backdrop-filter: blur(6px);
+  user-select: none;
+  transition: opacity 0.4s ease, filter 0.4s ease, background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.skillcloud__bubble:hover {
+  background: color-mix(in srgb, var(--accent) 28%, rgba(10, 16, 32, 0.6));
+  box-shadow:
+    0 0 26px -4px var(--accent),
+    inset 0 0 18px -6px var(--accent);
+  color: #fff;
+}
+
+.skillcloud__bubble.is-dimmed {
+  opacity: 0.12;
+  filter: saturate(0.3) blur(0.5px);
+}
+
+@media (max-width: 640px) {
+  .skillcloud__stage {
+    height: 70vh;
+    cursor: default;
+  }
+  .skillcloud__bubble {
+    font-size: 0.78rem !important;
+  }
+}

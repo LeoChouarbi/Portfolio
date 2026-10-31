@@ -1,7 +1,7 @@
 import React from "react";
 import ShinyCard from "../components/ShinyCard";
-import { Link } from "react-router-dom";
-import SkillGrid from "../components/SkillGrid";
+import SkillCloud from "../components/SkillCloud";
+import ConstellationPortal from "../components/ConstellationPortal";
 import ExperienceAndContact from "../components/ExperienceAndContact";
 
 const certifications = [
@@ -73,18 +73,26 @@ const certifications = [
 const Home = () => {
   return (
     <div className="px-6 py-10 w-full max-w-screen-2xl mx-auto">
-      <section id="hero" className="text-center text-white mb-10 w-full">
-        <h1 className="text-3xl font-bold">Bienvenue sur mon Portfolio, bonne découverte </h1>
-        <h3>Léo Chouarbi</h3>
-        <Link
-          to="/constellation"
-          className="mt-4 inline-block rounded bg-cyan-500 px-4 py-2 text-white hover:bg-cyan-600"
-        >
-          Explorer la constellation de projets
-        </Link>
+      <section id="hero" className="text-center text-white mb-6 w-full">
+        <p className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">
+          Ingénieur SSI / Cybersécurité
+        </p>
+        <h1 className="mt-3 text-4xl md:text-5xl font-extrabold">
+          Léo Chouarbi
+        </h1>
+        <p className="mx-auto mt-4 max-w-2xl text-slate-300">
+          Cybersécurité, SSI, radiofréquences &amp; SDR. Maintien en condition de
+          sécurité, durcissement, analyse de risques et projets techniques —
+          présentés ici comme une constellation à explorer.
+        </p>
       </section>
 
-      <section id="certifications" className="my-10">
+      {/* Appel à l'action mis en avant vers la constellation */}
+      <section id="projects">
+        <ConstellationPortal />
+      </section>
+
+      <section id="certifications" className="my-16">
         <h2 className="text-2xl font-semibold text-white mb-6 text-center">Certifications 🏆</h2>
         <div className="flex flex-wrap justify-center gap-6 max-w-7xl mx-auto">
           {certifications.map((cert, index) => (
@@ -102,7 +110,7 @@ const Home = () => {
       </section>
 
       <section id="skills" className="my-10 max-w-7xl mx-auto">
-        <SkillGrid />
+        <SkillCloud />
       </section>
 
       <section id="experience-contact" className="my-10 max-w-7xl mx-auto">
